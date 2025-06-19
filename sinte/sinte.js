@@ -1,0 +1,152 @@
+let contextoAudio = new (window.AudioContext || window.webkitAudioContext)();
+
+let osc1 = null;
+let osc2 = null;
+
+let freq1Slider = document.getElementById("frecuencia1");
+let freq2Slider = document.getElementById("frecuencia2");
+let freq1Span = document.getElementById("valorFrecuencia1");
+let freq2Span = document.getElementById("valorFrecuencia2");
+
+freq1Slider.addEventListener("input", () => {
+  freq1Span.textContent = `${freq1Slider.value} Hz`;
+  if (osc1) {
+    osc1.frequency.setValueAtTime(freq1Slider.value, contextoAudio.currentTime);
+  }
+});
+
+freq2Slider.addEventListener("input", () => {
+  freq2Span.textContent = `${freq2Slider.value} Hz`;
+  if (osc2) {
+    osc2.frequency.setValueAtTime(freq2Slider.value, contextoAudio.currentTime);
+  }
+});
+let tipo1Select = document.getElementById("tipo1");
+let tipo2Select = document.getElementById("tipo2");
+
+
+document.getElementById("iniciar1").addEventListener("click", () => {
+  detenerOsc1();
+  osc1 = contextoAudio.createOscillator();
+  osc1.type = tipo1Select.value;
+  osc1.frequency.setValueAtTime(freq1Slider.value, contextoAudio.currentTime);
+  osc1.connect(contextoAudio.destination);
+  osc1.start();
+});
+
+document.getElementById("iniciar2").addEventListener("click", () => {
+  detenerOsc2();
+  osc2 = contextoAudio.createOscillator();
+  osc2.type = tipo2Select.value;
+  osc2.frequency.setValueAtTime(freq2Slider.value, contextoAudio.currentTime);
+  osc2.connect(contextoAudio.destination);
+  osc2.start();
+});
+
+document.getElementById("sumar").addEventListener("click", () => {
+  detenerTodo();
+
+  osc1 = contextoAudio.createOscillator();
+  osc2 = contextoAudio.createOscillator();
+
+    osc1.type = tipo1Select.value;
+    osc2.type = tipo2Select.value;
+
+
+  osc1.frequency.setValueAtTime(freq1Slider.value, contextoAudio.currentTime);
+  osc2.frequency.setValueAtTime(freq2Slider.value, contextoAudio.currentTime);
+
+  osc1.connect(contextoAudio.destination);
+  osc2.connect(contextoAudio.destination);
+
+  osc1.start();
+  osc2.start();
+});
+
+document.getElementById("detener").addEventListener("click", detenerTodo);
+
+function detenerOsc1() {
+  if (osc1) {
+    osc1.stop();
+    osc1.disconnect();
+    osc1 = null;
+  }
+}
+
+function detenerOsc2() {
+  if (osc2) {
+    osc2.stop();
+    osc2.disconnect();
+    osc2 = null;
+  }
+}
+
+function detenerTodo() {
+  detenerOsc1();
+  detenerOsc2();
+}
+
+let ruidoFuente = null;
+
+function crearFiltroPasoBanda() {
+  const filtro = contextoAudio.createBiquadFilter();
+  filtro.type = "bandpass";
+  filtro.frequency.value = 550; // frecuencia central
+  filtro.Q.value = 0.5; // ancho de banda
+  return filtro;
+}
+
+function reproducirRuido(tipo) {
+  detenerRuido();
+
+  const bufferSize = 2 * contextoAudio.sampleRate;
+  const buffer = contextoAudio.createBuffer(1, bufferSize, contextoAudio.sampleRate);
+  const datos = buffer.getChannelData(0);
+
+  if (tipo === "blanco") {
+    for (let i = 0; i < bufferSize; i++) {
+      datos[i] = Math.random() * 2 - 1;
+    }
+  } else if (tipo === "rosa") {
+    let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+    for (let i = 0; i < bufferSize; i++) {
+      const blanco = Math.random() * 2 - 1;
+      b0 = 0.99886 * b0 + blanco * 0.0555179;
+      b1 = 0.99332 * b1 + blanco * 0.0750759;
+      b2 = 0.96900 * b2 + blanco * 0.1538520;
+      b3 = 0.86650 * b3 + blanco * 0.3104856;
+      b4 = 0.55000 * b4 + blanco * 0.5329522;
+      b5 = -0.7616 * b5 - blanco * 0.0168980;
+      datos[i] = b0 + b1 + b2 + b3 + b4 + b5 + b6 + blanco * 0.5362;
+      datos[i] *= 0.11; // normalización
+      b6 = blanco * 0.115926;
+    }
+  }
+
+  ruidoFuente = contextoAudio.createBufferSource();
+  ruidoFuente.buffer = buffer;
+  ruidoFuente.loop = true;
+
+  const filtro = crearFiltroPasoBanda();
+  ruidoFuente.connect(filtro).connect(contextoAudio.destination);
+  ruidoFuente.start();
+}
+
+function detenerRuido() {
+  if (ruidoFuente) {
+    ruidoFuente.stop();
+    ruidoFuente.disconnect();
+    ruidoFuente = null;
+  }
+}
+
+// Eventos de botones de ruido
+document.getElementById("ruidoBlanco").addEventListener("click", () => {
+  reproducirRuido("blanco");
+});
+
+document.getElementById("ruidoRosa").addEventListener("click", () => {
+  reproducirRuido("rosa");
+});
+
+document.getElementById("detenerRuido").addEventListener("click", detenerRuido);
