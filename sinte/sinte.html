@@ -2,56 +2,85 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Suma de Ondas</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sintetizador + Piano</title>
   <link rel="stylesheet" href="sinte.css" />
 </head>
 <body>
-  <h1>Generador de Dos Ondas</h1>
+  <h1>Sintetizador con Piano Virtual</h1>
 
- <div>
-  <h3>Onda 1</h3>
-  <label for="tipo1">Tipo:</label>
-  <select id="tipo1">
-    <option value="sine">Senoidal</option>
-    <option value="square">Cuadrada</option>
-    <option value="triangle">Triangular</option>
-    <option value="sawtooth">Diente de sierra</option>
-  </select>
-  <br />
-  <label for="frecuencia1">Frecuencia (Hz):</label>
-  <input type="range" id="frecuencia1" min="100" max="2000" value="440" />
-  <span id="valorFrecuencia1">440 Hz</span>
-</div>
+  <!-- Controles de Onda 1 -->
+  <div>
+    <h3>Onda 1</h3>
+    <label for="tipo1">Tipo:</label>
+    <select id="tipo1">
+      <option value="sine">Senoidal</option>
+      <option value="square">Cuadrada</option>
+      <option value="triangle">Triangular</option>
+      <option value="sawtooth">Diente de sierra</option>
+    </select><br/>
+    <label for="frecuencia1">Frecuencia (Hz):</label>
+    <input type="range" id="frecuencia1" min="100" max="2000" value="440" />
+    <span id="valorFrecuencia1">440 Hz</span>
+  </div>
 
-<div>
-  <h3>Onda 2</h3>
-  <label for="tipo2">Tipo:</label>
-  <select id="tipo2">
-    <option value="sine">Senoidal</option>
-    <option value="square">Cuadrada</option>
-    <option value="triangle">Triangular</option>
-    <option value="sawtooth">Diente de sierra</option>
-  </select>
-  <br />
-  <label for="frecuencia2">Frecuencia (Hz):</label>
-  <input type="range" id="frecuencia2" min="100" max="2000" value="660" />
-  <span id="valorFrecuencia2">660 Hz</span>
-</div>
+  <!-- Controles de Onda 2 -->
+  <div>
+    <h3>Onda 2</h3>
+    <label for="tipo2">Tipo:</label>
+    <select id="tipo2">
+      <option value="sine">Senoidal</option>
+      <option value="square">Cuadrada</option>
+      <option value="triangle">Triangular</option>
+      <option value="sawtooth">Diente de sierra</option>
+    </select><br/>
+    <label for="frecuencia2">Frecuencia (Hz):</label>
+    <input type="range" id="frecuencia2" min="100" max="2000" value="660" />
+    <span id="valorFrecuencia2">660 Hz</span>
+  </div>
 
+  <!-- Botones de control -->
+  <div>
+    <button id="iniciar1">Iniciar Onda 1</button>
+    <button id="iniciar2">Iniciar Onda 2</button>
+    <button id="sumar">Escuchar Suma</button>
+    <button id="detener">Detener Todo</button>
+  </div>
 
-  <br />
-  <button id="iniciar1">Iniciar Onda 1</button>
-  <button id="iniciar2">Iniciar Onda 2</button>
-  <button id="sumar">Escuchar Suma</button>
-  <button id="detener">Detener Todo</button>
+  <!-- Ruido -->
+  <div>
+    <button id="ruidoBlanco">Reproducir Ruido Blanco</button>
+    <button id="ruidoRosa">Reproducir Ruido Rosa</button>
+    <button id="detenerRuido">Detener Ruido</button>
+  </div>
 
-  <br />
-<button id="ruidoBlanco">Reproducir Ruido Blanco (100–1000 Hz)</button>
-<button id="ruidoRosa">Reproducir Ruido Rosa (100–1000 Hz)</button>
-<button id="detenerRuido">Detener Ruido</button>
+  <!-- Piano Virtual -->
+  <div id="piano" style="margin-top:40px;">
+    <h3>Piano Virtual</h3>
+    <p>Usa el teclado: A S D F G H J K (blancas), W E T Y U O (negras)</p>
+    <div class="piano-keys">
+      <!-- teclas blancas -->
+      <div class="key white" data-key="a">A</div>
+      <div class="key white" data-key="s">S</div>
+      <div class="key white" data-key="d">D</div>
+      <div class="key white" data-key="f">F</div>
+      <div class="key white" data-key="g">G</div>
+      <div class="key white" data-key="h">H</div>
+      <div class="key white" data-key="j">J</div>
+      <div class="key white" data-key="k">K</div>
 
+      <!-- teclas negras -->
+      <div class="key black" data-key="w">W</div>
+      <div class="key black" data-key="e">E</div>
+      <div class="key black" data-key="t">T</div>
+      <div class="key black" data-key="y">Y</div>
+      <div class="key black" data-key="u">U</div>
+      <div class="key black" data-key="o">O</div>
+    </div>
+  </div>
 
+  <!-- Scripts -->
   <script src="sinte.js"></script>
+  <script src="piano.js"></script>
 </body>
 </html>

@@ -76,3 +76,149 @@ button:hover {
 button:active {
   transform: scale(0.98);
 }
+
+/* ======= Piano Virtual ======= */
+.piano {
+  position: relative;
+  width: 500px;
+  height: 200px;
+  margin: 40px auto;
+}
+
+.key {
+  position: absolute;
+  border: 1px solid #333;
+  text-align: center;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  user-select: none;
+  z-index: 1;
+}
+
+/* Teclas blancas */
+.key.white {
+  width: 60px;
+  height: 200px;
+  background: white;
+  color: black;
+  z-index: 1;
+}
+
+/* Teclas negras */
+.key.black {
+  width: 40px;
+  height: 120px;
+  background: black;
+  color: white;
+  top: 0;
+  z-index: 2;
+}
+
+/* Resaltado cuando se tocan */
+.key.white.active {
+  background: #66ccff;
+}
+
+.key.black.active {
+  background: #444;
+}
+
+/* Contenedor general del piano */
+#piano {
+  width: 100%;
+  position: fixed;       /* Fijo en la parte inferior de la pantalla */
+  bottom: 0;             /* Pegado al fondo */
+  left: 0;
+  background: rgba(30, 60, 114, 0.95);  /* Fondo semitransparente acorde al tema */
+  padding: 10px 0 20px 0;
+  box-shadow: 0 -4px 10px rgba(0,0,0,0.5);
+  z-index: 9999;
+  text-align: center;
+  user-select: none;
+}
+
+/* Contenedor de las teclas: tamaño fijo y centrado */
+.piano-keys {
+  position: relative;
+  width: 480px;   /* 8 teclas blancas x 60px */
+  height: 200px;
+  margin: 0 auto; /* centra horizontalmente */
+}
+
+/* Teclas blancas */
+.key.white {
+  position: absolute;
+  width: 60px;
+  height: 200px;
+  background: white;
+  color: black;
+  border: 1px solid #333;
+  border-radius: 0 0 6px 6px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding-bottom: 8px;
+  box-sizing: border-box;
+  transition: background-color 0.2s;
+  z-index: 1;
+}
+
+/* Posiciones teclas blancas */
+.key.white:nth-child(1) { left: 0; }
+.key.white:nth-child(2) { left: 60px; }
+.key.white:nth-child(3) { left: 120px; }
+.key.white:nth-child(4) { left: 180px; }
+.key.white:nth-child(5) { left: 240px; }
+.key.white:nth-child(6) { left: 300px; }
+.key.white:nth-child(7) { left: 360px; }
+.key.white:nth-child(8) { left: 420px; }
+
+/* Teclas negras */
+.key.black {
+  position: absolute;
+  width: 40px;
+  height: 120px;
+  background: black;
+  color: white;
+  top: 0;
+  border-radius: 0 0 4px 4px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding-bottom: 5px;
+  box-sizing: border-box;
+  transition: background-color 0.2s;
+  z-index: 2;
+}
+
+/* Posiciones teclas negras */
+.key.black:nth-child(9)  { left: 45px;  }
+.key.black:nth-child(10) { left: 105px; }
+.key.black:nth-child(11) { left: 225px; }
+.key.black:nth-child(12) { left: 285px; }
+.key.black:nth-child(13) { left: 345px; }
+.key.black:nth-child(14) { left: 405px; }
+
+/* Efecto al tocar las teclas */
+.key.white.active {
+  background: #66ccff;
+}
+
+.key.black.active {
+  background: #444;
+}
+

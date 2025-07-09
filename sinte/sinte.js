@@ -21,9 +21,9 @@ freq2Slider.addEventListener("input", () => {
     osc2.frequency.setValueAtTime(freq2Slider.value, contextoAudio.currentTime);
   }
 });
+
 let tipo1Select = document.getElementById("tipo1");
 let tipo2Select = document.getElementById("tipo2");
-
 
 document.getElementById("iniciar1").addEventListener("click", () => {
   detenerOsc1();
@@ -49,9 +49,8 @@ document.getElementById("sumar").addEventListener("click", () => {
   osc1 = contextoAudio.createOscillator();
   osc2 = contextoAudio.createOscillator();
 
-    osc1.type = tipo1Select.value;
-    osc2.type = tipo2Select.value;
-
+  osc1.type = tipo1Select.value;
+  osc2.type = tipo2Select.value;
 
   osc1.frequency.setValueAtTime(freq1Slider.value, contextoAudio.currentTime);
   osc2.frequency.setValueAtTime(freq2Slider.value, contextoAudio.currentTime);
@@ -118,7 +117,7 @@ function reproducirRuido(tipo) {
       b4 = 0.55000 * b4 + blanco * 0.5329522;
       b5 = -0.7616 * b5 - blanco * 0.0168980;
       datos[i] = b0 + b1 + b2 + b3 + b4 + b5 + b6 + blanco * 0.5362;
-      datos[i] *= 0.11; // normalización
+      datos[i] *= 0.11;
       b6 = blanco * 0.115926;
     }
   }
@@ -140,7 +139,6 @@ function detenerRuido() {
   }
 }
 
-// Eventos de botones de ruido
 document.getElementById("ruidoBlanco").addEventListener("click", () => {
   reproducirRuido("blanco");
 });
@@ -150,3 +148,63 @@ document.getElementById("ruidoRosa").addEventListener("click", () => {
 });
 
 document.getElementById("detenerRuido").addEventListener("click", detenerRuido);
+
+//
+// 🎹 Piano virtual: añadimos teclas controladas por el teclado
+//
+const teclasFrec = {
+  'a': 261.63,  // C4
+  'w': 277.18,  // C#4
+  's': 293.66,  // D4
+  'e': 311.13,  // D#4
+  'd': 329.63,  // E4
+  'f': 349.23,  // F4
+  't': 369.99,  // F#4
+  'g': 392.00,  // G4
+  'y': 415.30,  // G#4
+  'h': 440.00,  // A4
+  'u': 466.16,  // A#4
+  'j': 493.88,  // B4
+  'o': 523.25,  // C5
+  'k': 554.37   // C#5
+};
+
+document.addEventListener("keydown", (event) => {
+  const tecla = event.key.toLowerCase();
+  if (teclasFrec[tecla]) {
+    reproducirNota(teclasFrec[tecla]);
+    resaltarVisual(tecla);
+  }
+});
+
+function reproducirNota(frecuencia) {
+  const osc1Temp = contextoAudio.createOscillator();
+  const osc2Temp = contextoAudio.createOscillator();
+  const gainNode = contextoAudio.createGain();
+
+  osc1Temp.type = tipo1Select.value;
+  osc2Temp.type = tipo2Select.value;
+
+  osc1Temp.frequency.setValueAtTime(frecuencia, contextoAudio.currentTime);
+  osc2Temp.frequency.setValueAtTime(frecuencia, contextoAudio.currentTime);
+
+  osc1Temp.connect(gainNode);
+  osc2Temp.connect(gainNode);
+  gainNode.connect(contextoAudio.destination);
+
+  gainNode.gain.setValueAtTime(1, contextoAudio.currentTime);
+  gainNode.gain.exponentialRampToValueAtTime(0.001, contextoAudio.currentTime + 1);
+
+  osc1Temp.start();
+  osc2Temp.start();
+  osc1Temp.stop(contextoAudio.currentTime + 1);
+  osc2Temp.stop(contextoAudio.currentTime + 1);
+}
+
+function resaltarVisual(tecla) {
+  const div = document.querySelector(`.key[data-key="${tecla}"]`);
+  if (div) {
+    div.classList.add("active");
+    setTimeout(() => div.classList.remove("active"), 150);
+  }
+}
