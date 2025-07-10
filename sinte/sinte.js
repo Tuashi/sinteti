@@ -173,14 +173,14 @@ const teclaNotas = {
 document.addEventListener("keydown", (event) => {
   const tecla = event.key.toLowerCase();
   if (teclaNotas[tecla]) {
-    reproducirNotaDesdeBase(teclaNotas[tecla]);
+    reproducirNotaDoble(teclaNotas[tecla]);
     resaltarVisual(tecla);
   }
 });
 
-function reproducirNotaDesdeBase(factor) {
-  const baseFreq = parseFloat(freq1Slider.value); // Frecuencia base del slider 1
-  const freq = baseFreq * factor;
+function reproducirNotaDoble(factor) {
+  const freq1 = parseFloat(freq1Slider.value) * factor;
+  const freq2 = parseFloat(freq2Slider.value) * factor;
 
   const osc1Temp = contextoAudio.createOscillator();
   const osc2Temp = contextoAudio.createOscillator();
@@ -189,8 +189,8 @@ function reproducirNotaDesdeBase(factor) {
   osc1Temp.type = tipo1Select.value;
   osc2Temp.type = tipo2Select.value;
 
-  osc1Temp.frequency.setValueAtTime(freq, contextoAudio.currentTime);
-  osc2Temp.frequency.setValueAtTime(freq, contextoAudio.currentTime);
+  osc1Temp.frequency.setValueAtTime(freq1, contextoAudio.currentTime);
+  osc2Temp.frequency.setValueAtTime(freq2, contextoAudio.currentTime);
 
   osc1Temp.connect(gainNode);
   osc2Temp.connect(gainNode);
