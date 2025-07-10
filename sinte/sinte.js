@@ -86,14 +86,29 @@ function detenerTodo() {
 }
 
 let ruidoFuente = null;
+let filtroRuido = null;
+let filtroSlider = document.getElementById("filtroRuido");
+let filtroSpan = document.getElementById("valorFiltroRuido");
+
+if(filtroSlider) {
+  filtroSlider.addEventListener("input", () => {
+    filtroSpan.textContent = `${filtroSlider.value} Hz`;
+    if (filtroRuido) {
+      filtroRuido.frequency.setValueAtTime(filtroSlider.value, contextoAudio.currentTime);
+    }
+  });
+}
+
 
 function crearFiltroPasoBanda() {
   const filtro = contextoAudio.createBiquadFilter();
   filtro.type = "bandpass";
-  filtro.frequency.value = 550; // frecuencia central
-  filtro.Q.value = 0.5; // ancho de banda
+  // Usar el valor actual del slider si existe, sino un valor por defecto
+  filtro.frequency.value = filtroSlider ? filtroSlider.value : 550;
+  filtro.Q.value = 0.5;
   return filtro;
 }
+
 
 function reproducirRuido(tipo) {
   detenerRuido();
@@ -126,8 +141,9 @@ function reproducirRuido(tipo) {
   ruidoFuente.buffer = buffer;
   ruidoFuente.loop = true;
 
-  const filtro = crearFiltroPasoBanda();
-  ruidoFuente.connect(filtro).connect(contextoAudio.destination);
+  filtroRuido = crearFiltroPasoBanda();
+  ruidoFuente.connect(filtroRuido).connect(contextoAudio.destination);
+
   ruidoFuente.start();
 }
 

@@ -49,10 +49,15 @@
 
   <!-- Ruido -->
   <div>
-    <button id="ruidoBlanco">Reproducir Ruido Blanco</button>
-    <button id="ruidoRosa">Reproducir Ruido Rosa</button>
-    <button id="detenerRuido">Detener Ruido</button>
+  <button id="ruidoBlanco">Reproducir Ruido Blanco</button>
+  <button id="ruidoRosa">Reproducir Ruido Rosa</button>
+  <button id="detenerRuido">Detener Ruido</button>
+  <br />
+  <label for="filtroRuido">Filtro Paso Banda (Hz): </label>
+  <input type="range" id="filtroRuido" min="100" max="2000" value="550" />
+  <span id="valorFiltroRuido">550 Hz</span>
   </div>
+
 
   <!-- Piano Virtual -->
   <div id="piano" style="margin-top:40px;">
