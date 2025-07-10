@@ -150,34 +150,38 @@ document.getElementById("ruidoRosa").addEventListener("click", () => {
 document.getElementById("detenerRuido").addEventListener("click", detenerRuido);
 
 //
-// 🎹 Piano virtual: añadimos teclas controladas por el teclado
 //
-const teclasFrec = {
-  'a': 261.63,  // C4
-  'w': 277.18,  // C#4
-  's': 293.66,  // D4
-  'e': 311.13,  // D#4
-  'd': 329.63,  // E4
-  'f': 349.23,  // F4
-  't': 369.99,  // F#4
-  'g': 392.00,  // G4
-  'y': 415.30,  // G#4
-  'h': 440.00,  // A4
-  'u': 466.16,  // A#4
-  'j': 493.88,  // B4
-  'o': 523.25,  // C5
-  'k': 554.37   // C#5
+// 🎹 Piano virtual: teclas controladas por el teclado
+//
+const teclaNotas = {
+  'a': 1.0,    // C4
+  'w': 1.059,  // C#4
+  's': 1.122,  // D4
+  'e': 1.189,  // D#4
+  'd': 1.26,   // E4
+  'f': 1.335,  // F4
+  't': 1.414,  // F#4
+  'g': 1.498,  // G4
+  'y': 1.587,  // G#4
+  'h': 1.682,  // A4
+  'u': 1.781,  // A#4
+  'j': 1.887,  // B4
+  'o': 2.0,    // C5
+  'k': 2.122   // C#5
 };
 
 document.addEventListener("keydown", (event) => {
   const tecla = event.key.toLowerCase();
-  if (teclasFrec[tecla]) {
-    reproducirNota(teclasFrec[tecla]);
+  if (teclaNotas[tecla]) {
+    reproducirNotaDesdeBase(teclaNotas[tecla]);
     resaltarVisual(tecla);
   }
 });
 
-function reproducirNota(frecuencia) {
+function reproducirNotaDesdeBase(factor) {
+  const baseFreq = parseFloat(freq1Slider.value); // Frecuencia base del slider 1
+  const freq = baseFreq * factor;
+
   const osc1Temp = contextoAudio.createOscillator();
   const osc2Temp = contextoAudio.createOscillator();
   const gainNode = contextoAudio.createGain();
@@ -185,8 +189,8 @@ function reproducirNota(frecuencia) {
   osc1Temp.type = tipo1Select.value;
   osc2Temp.type = tipo2Select.value;
 
-  osc1Temp.frequency.setValueAtTime(frecuencia, contextoAudio.currentTime);
-  osc2Temp.frequency.setValueAtTime(frecuencia, contextoAudio.currentTime);
+  osc1Temp.frequency.setValueAtTime(freq, contextoAudio.currentTime);
+  osc2Temp.frequency.setValueAtTime(freq, contextoAudio.currentTime);
 
   osc1Temp.connect(gainNode);
   osc2Temp.connect(gainNode);
